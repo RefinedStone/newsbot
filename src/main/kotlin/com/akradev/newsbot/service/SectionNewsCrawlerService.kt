@@ -21,13 +21,12 @@ class SectionNewsCrawlerService {
 
         return try {
             driver.get(url)
-
+            savePageSource(driver.pageSource, section)
             val selector = "ul.sa_list li.sa_item a.sa_text_title"
             val wait = WebDriverWait(driver, Duration.ofSeconds(10))
             wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(selector)))
 
             val elements = driver.findElements(By.cssSelector("ul.sa_list li.sa_item"))
-
             elements.mapNotNull { item ->
                 val linkElement = try {
                     item.findElement(By.cssSelector("a.sa_text_title"))
@@ -44,11 +43,13 @@ class SectionNewsCrawlerService {
                 val url = linkElement.getAttribute("href") ?: return@mapNotNull null
 
                 val summary = try {
-                    item.findElement(By.cssSelector("div.sa_text_lede")).text.trim()
+                    item.findElement(By.cssSelector("div.sa_text_lede"))
+                        .getAttribute("textContent")
+                        ?.trim()
+                        ?.takeIf { it.isNotBlank() }
                 } catch (e: NoSuchElementException) {
                     null
                 }
-
                 if (title.isNotBlank()) {
                     SectionNewsItem(title = title, url = url, summary = summary, section = section)
                 } else null
