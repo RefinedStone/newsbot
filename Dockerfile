@@ -1,23 +1,37 @@
-FROM --platform=linux/arm64 eclipse-temurin:17-jdk
+# =======================================
+# 1) 빌드 스테이지: JAR 준비
+# =======================================
+FROM eclipse-temurin:17-jdk AS builder
 
-LABEL maintainer="akradev"
-LABEL description="ARM64 기반 Spring 크롬북 서버 with Chromium"
+WORKDIR /workspace
 
-# 패키지 설치
-RUN apt-get update && apt-get install -y \
-    wget curl unzip gnupg ca-certificates \
-    chromium-browser \
-    libnss3 libatk1.0-0 libatk-bridge2.0-0 libx11-xcb1 \
-    libxcomposite1 libxdamage1 libxrandr2 libxss1 \
-    libasound2t64 libgtk-3-0 xdg-utils fonts-liberation \
-    --no-install-recommends && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# JAR 복사
+COPY build/libs/newsbot-0.0.1-SNAPSHOT.jar ./app.jar
 
-# JAR 파일 복사
-COPY build/libs/newsbot-0.0.1-SNAPSHOT.jar /app.jar
+# =======================================
+# 2) 런타임 스테이지: Selenium + Chromium + Java
+# =======================================
+FROM --platform=linux/arm64 seleniarm/standalone-chromium
 
-# 기본 포트 노출
-EXPOSE 8080
+USER root
+WORKDIR /app
 
-# 실행
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# 1) Temurin JDK 복사
+COPY --from=builder /opt/java/openjdk /opt/java/openjdk
+ENV PATH=/opt/java/openjdk/bin:$PATH
+
+# 2) Spring Boot JAR 복사
+COPY --from=builder /workspace/app.jar ./app.jar
+
+# (선택) 추가 의존성 설치 — seleniarm base에 없을 때만
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        fonts-liberation \
+        xdg-utils \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# 3) 포트 노출 (Spring Boot 서버 포트)
+EXPOSE 21000
+
+# 4) 컨테이너 시작 시 실행 명령
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
