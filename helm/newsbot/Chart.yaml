@@ -1,0 +1,6 @@
+apiVersion: v2
+name: newsbot
+description: Spring 크롤러 서비스 Helm Chart
+type: application
+version: 0.1.0         # Helm Chart 버전
+appVersion: "0.0.1"    # 실제 앱 버전 (이미지 tag와 매칭해도 됨)
