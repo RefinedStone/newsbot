@@ -62,7 +62,7 @@ class SectionNewsCrawlerService {
     private fun createDriver(): WebDriver {
         WebDriverManager.chromedriver().setup()
         val options = ChromeOptions().apply {
-            addArguments("--headless=new", "--disable-gpu")
+            addArguments("--headless=new", "--disable-gpu", "--no-sandbox")
         }
         return ChromeDriver(options)
     }
