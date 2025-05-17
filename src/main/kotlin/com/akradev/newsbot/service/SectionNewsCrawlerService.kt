@@ -3,6 +3,7 @@ package com.akradev.newsbot.service
 import com.akradev.newsbot.controller.NewsSection
 import com.akradev.newsbot.controller.SectionNewsItem
 import io.github.bonigarcia.wdm.WebDriverManager
+import io.github.bonigarcia.wdm.config.Architecture
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
@@ -60,7 +61,9 @@ class SectionNewsCrawlerService {
     }
 
     private fun createDriver(): WebDriver {
-        WebDriverManager.chromedriver().setup()
+        WebDriverManager.chromedriver()
+            .architecture(Architecture.ARM64)
+            .setup()
         val options = ChromeOptions().apply {
             addArguments("--headless=new", "--disable-gpu", "--no-sandbox")
         }
