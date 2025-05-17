@@ -40,12 +40,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image
+      - name: Build and Push (ARM64)
         run: |
           owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          docker build -t ghcr.io/$owner/newsbot:0.0.1 .
-
-      - name: Push Docker image
-        run: |
-          owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          docker push ghcr.io/$owner/newsbot:0.0.1
+          docker buildx build \
+            --platform linux/arm64 \
+            -t ghcr.io/$owner/newsbot:0.0.1 \
+            --push .
