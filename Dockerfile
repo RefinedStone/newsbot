@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk
+FROM --platform=linux/arm64 eclipse-temurin:17-jdk
 
 LABEL maintainer="akradev"
 LABEL description="ARM64 기반 Spring 크롬북 서버 with Chromium"
