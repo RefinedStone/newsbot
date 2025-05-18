@@ -5,7 +5,6 @@ on:
     tags:
       - 'v*.*.*'   # v1.2.3 형태로 태그 푸시하면 트리거
 env:
-  REGISTRY: ghcr.io/${{ toLower(github.repository_owner) }}
   CHART_DIR: ./helm/newsbot
 
 jobs:
@@ -50,9 +49,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 레지스트리 네임스페이스를 소문자로 설정
+        run: |
+            # bash parameter expansion (Ubuntu 환경의 기본 shell은 bash)
+            echo "REGISTRY=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
+
       - name: Build and Push Docker image
         run: |
-          owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           docker buildx build \
             --platform linux/arm64 \
             --build-arg VERSION=${{ env.VERSION }} \
