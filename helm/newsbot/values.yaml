@@ -3,10 +3,16 @@ image:
   tag: "0.0.1"
   pullPolicy: IfNotPresent
 
+#service:
+#  type: ClusterIP
+#  port: 21000        # 클러스터 내부 접근 포트
+#  targetPort: 21000  # 실제 컨테이너 내부 애플리케이션 포트
 service:
-  type: ClusterIP
-  port: 8080
-
+  type: NodePort
+  port: 21000
+  targetPort: 21000
+  nodePort: 32100 # 테스트용으로 포트포워딩
+  
 replicaCount: 1
 resources: {}
 
