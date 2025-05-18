@@ -32,7 +32,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew bootJar
+        run: ./gradlew clean bootJar -Pversion=${{ env.VERSION }}
 
       - name: Set up QEMU (for ARM64 emulation)
         uses: docker/setup-qemu-action@v3
