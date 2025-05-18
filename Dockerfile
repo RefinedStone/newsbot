@@ -2,11 +2,11 @@
 # 1) 빌드 스테이지: JAR 준비
 # =======================================
 FROM eclipse-temurin:17-jdk AS builder
-
+ARG VERSION
 WORKDIR /workspace
 
 # JAR 복사
-COPY build/libs/newsbot-0.0.1-SNAPSHOT.jar ./app.jar
+COPY build/libs//newsbot-${VERSION}.jar ./app.jar
 
 # =======================================
 # 2) 런타임 스테이지: Selenium + Chromium + Java

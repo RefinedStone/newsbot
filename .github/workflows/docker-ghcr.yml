@@ -2,12 +2,11 @@ name: Build and Push Docker Image to GHCR
 
 on:
   push:
-    branches: [ main ]
-    paths:
-      - Dockerfile
-      - '**/*.kt'
-      - '**/*.yml'
-      - '**/*.gradle*'
+    tags:
+      - 'v*.*.*'   # v1.2.3 형태로 태그 푸시하면 트리거
+env:
+  REGISTRY: ghcr.io/${{ toLower(github.repository_owner) }}
+  CHART_DIR: ./helm/newsbot
 
 jobs:
   docker-build:
@@ -20,6 +19,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: 태그에서 버전 추출
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -53,5 +55,12 @@ jobs:
           owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           docker buildx build \
             --platform linux/arm64 \
-            -t ghcr.io/$owner/newsbot:0.0.1 \
+            --build-arg VERSION=${{ env.VERSION }} \
+            -t ${{ env.REGISTRY }}/newsbot:${{ env.VERSION }} \
             --push .
+          
+      - name: Helm 배포
+        run: |
+          helm upgrade --install newsbot ${{ env.CHART_DIR }} \
+            --set image.repository=${{ env.REGISTRY }}/newsbot \
+            --set image.tag=${{ env.VERSION }}

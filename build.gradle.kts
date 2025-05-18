@@ -6,7 +6,8 @@ plugins {
 }
 
 group = "com.akradev"
-version = "0.0.1-SNAPSHOT"
+// CLI로 -Pversion=값 이 전달되면 그걸 쓰고, 아니면 기본 스냅샷
+version = findProperty("version")?.toString() ?: "0.0.1-SNAPSHOT"
 
 java {
     toolchain {
