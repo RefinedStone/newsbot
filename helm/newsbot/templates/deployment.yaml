@@ -47,7 +47,9 @@ spec:
           command: [ "java" ]
           args:
             - "-javaagent:/app/opentelemetry-javaagent.jar"
-            - "-Dotel.exporter=logging"
+            - "-Dotel.traces.exporter=none"
+            - "-Dotel.metrics.exporter=none"
+            - "-Dotel.logs.exporter=none"
             - "-jar"
             - "/app/app.jar"
           {{- with .Values.livenessProbe }}

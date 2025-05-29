@@ -38,5 +38,5 @@ EXPOSE 21000
 
 # 4) 컨테이너 시작 시 실행 명령
 #ENTRYPOINT ["java", "-javaagent:/app/opentelemetry-javaagent.jar", "-jar", "/app/app.jar"]
-ENTRYPOINT ["java", "-javaagent:/app/opentelemetry-javaagent.jar", "-Dotel.exporter=logging", "-jar", "/app/app.jar"]
+#ENTRYPOINT ["java", "-javaagent:/app/opentelemetry-javaagent.jar", "-Dotel.exporter=logging", "-jar", "/app/app.jar"]
 
