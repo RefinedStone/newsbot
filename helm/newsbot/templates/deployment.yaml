@@ -44,10 +44,12 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-          env:
-                {{- with .Values.env }}
-                {{- toYaml . | nindent 10 }}
-                {{- end }}
+          command: [ "java" ]
+          args:
+            - "-javaagent:/app/opentelemetry-javaagent.jar"
+            - "-Dotel.exporter=logging"
+            - "-jar"
+            - "/app/app.jar"
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
