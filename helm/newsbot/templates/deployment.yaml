@@ -44,6 +44,10 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          env:
+               {{- with .Values.env }} # 환경변수 주입
+               {{- toYaml . | nindent 6 }}
+               {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
