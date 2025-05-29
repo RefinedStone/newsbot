@@ -30,6 +30,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# 3) OpenTelemetry javaagent 파일 다운로드 (런타임 스테이지에서)
+ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
+
 # 3) 포트 노출 (Spring Boot 서버 포트)
 EXPOSE 21000
 
