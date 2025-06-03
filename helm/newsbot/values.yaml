@@ -12,7 +12,8 @@ service:
   port: 21000
   targetPort: 21000
   nodePort: 32100 # 테스트용으로 포트포워딩
-
+nodeSelector:
+  role: monitoring
 env:
   - name: JAVA_TOOL_OPTIONS
     value: "-Dotel.exporter=logging" # Tempo 없을 때 임시 적용
