@@ -47,7 +47,7 @@ spec:
           command: [ "java" ]
           args:
             - "-javaagent:/app/opentelemetry-javaagent.jar"
-            - "-Dotel.exporter.otlp.endpoint=http://tempo.monitoring.svc.cluster.local:4317"
+            - "-Dotel.exporter.otlp.endpoint=http://tempo.monitoring.svc.cluster.local:4318"
             - "-jar"
             - "/app/app.jar"
           {{- with .Values.livenessProbe }}
